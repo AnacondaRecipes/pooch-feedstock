@@ -31,6 +31,7 @@ test:
   requires:
     - pytest
     - pip
+    - python <3.10
   imports:
     - pooch
   commands:
