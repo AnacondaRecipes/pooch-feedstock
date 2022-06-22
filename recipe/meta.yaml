@@ -16,7 +16,7 @@ build:
 
 requirements:
   host:
-    - python >=3.6
+    - python
     - pip
     - setuptools
     - setuptools_scm
@@ -30,10 +30,13 @@ requirements:
 test:
   requires:
     - pytest
+    - pip
+    - python <3.10
   imports:
     - pooch
   commands:
     - pytest --pyargs pooch.tests.test_integration
+    - pip check
 
 about:
   home: https://github.com/fatiando/pooch
