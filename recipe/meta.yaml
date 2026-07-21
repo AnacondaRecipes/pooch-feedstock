@@ -1,25 +1,27 @@
 {% set name = "pooch" %}
-{% set version = "1.8.2" %}
+{% set version = "1.9.0" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 76561f0de68a01da4df6af38e9955c4c9d1a5c90da73f7e40276a5728ec83d10
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: de46729579b9857ffd3e741987a2f6d5e0e03219892c167c6578c0091fb511ed
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+  skip: true  # [py<39]
 
 requirements:
   host:
     - python
     - pip
-    - setuptools
+    - setuptools >=45
     - setuptools_scm
     - wheel
+    - setuptools-scm >=6.2
   run:
     - python
     - platformdirs >=2.5.0
@@ -29,6 +31,7 @@ requirements:
     - tqdm >=4.41.0,<5.0.0
     - paramiko >=2.7.0
     - xxhash >=1.4.3
+    - python-xxhash >=1.4.3
 
 test:
   requires:
