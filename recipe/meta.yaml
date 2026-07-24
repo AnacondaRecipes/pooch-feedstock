@@ -2,7 +2,7 @@
 {% set version = "1.9.0" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
@@ -19,28 +19,36 @@ requirements:
     - python
     - pip
     - setuptools >=45
-    - setuptools_scm
     - wheel
     - setuptools-scm >=6.2
+    - toml
   run:
     - python
     - platformdirs >=2.5.0
     - packaging >=20.0
     - requests >=2.19.0
   run_constrained:
+    # progress
     - tqdm >=4.41.0,<5.0.0
+    # sftp
     - paramiko >=2.7.0
+    # xxhash
     - xxhash >=1.4.3
-    - python-xxhash >=1.4.3
+
+# E       fixture 'ftpserver' not found
+# pytest-localftpserver is not a part of the Anaconda main channel.
+{% set disabled_tests = " not test_check_availability_on_ftp" %}
+{% set disabled_tests = disabled_tests + " and not test_ftp_downloader" %}
 
 test:
   requires:
     - pytest
     - pip
+    - pytest-httpserver
   imports:
     - pooch
   commands:
-    - pytest --pyargs pooch.tests.test_integration
+    - pytest --pyargs -vv pooch.tests -k "{{ disabled_tests }}"
     - pip check
 
 about:
