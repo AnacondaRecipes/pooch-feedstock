@@ -1,43 +1,64 @@
 {% set name = "pooch" %}
-{% set version = "1.8.2" %}
+{% set version = "1.9.0" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 76561f0de68a01da4df6af38e9955c4c9d1a5c90da73f7e40276a5728ec83d10
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: de46729579b9857ffd3e741987a2f6d5e0e03219892c167c6578c0091fb511ed
 
 build:
   number: 0
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
+  skip: true  # [py<39]
 
 requirements:
   host:
     - python
     - pip
-    - setuptools
-    - setuptools_scm
+    - setuptools >=45
     - wheel
+    - setuptools-scm >=6.2
+    - toml
   run:
     - python
     - platformdirs >=2.5.0
     - packaging >=20.0
     - requests >=2.19.0
   run_constrained:
+    # progress
     - tqdm >=4.41.0,<5.0.0
+    # sftp
     - paramiko >=2.7.0
+    # xxhash
     - xxhash >=1.4.3
+
+# E       fixture 'ftpserver' not found
+# pytest-localftpserver is not a part of the Anaconda main channel.
+{% set disabled_tests = " not test_check_availability_on_ftp" %}
+{% set disabled_tests = disabled_tests + " and not test_ftp_downloader" %}
+
+# requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://figshare.com/articles/dataset/Test_data_for_the_Pooch_library/14763051/1
+{% set disabled_tests = disabled_tests + " and not test_core.py::test_pooch_custom_url" %}  # [linux]
+{% set disabled_tests = disabled_tests + " and not test_core.py::test_pooch_download" %}  # [linux]
+{% set disabled_tests = disabled_tests + " and not test_core.py::test_load_registry_from_doi" %}  # [linux]
+{% set disabled_tests = disabled_tests + " and not test_figshare_url_file_not_found" %}  # [linux]
+{% set disabled_tests = disabled_tests + " and not test_doi_downloader" %}  # [linux]
+{% set disabled_tests = disabled_tests + " and not test_downloaders.py::test_figshare_unspecified_version" %}  # [linux]
+{% set disabled_tests = disabled_tests + " and not test_figshare_data_repository_versions" %}  # [linux]
+{% set disabled_tests = disabled_tests + " and not test_create_and_fetch" %}  # [linux]
 
 test:
   requires:
     - pytest
     - pip
+    - pytest-httpserver
   imports:
     - pooch
   commands:
-    - pytest --pyargs pooch.tests.test_integration
+    - pytest --pyargs -vv pooch.tests -k "{{ disabled_tests }}"
     - pip check
 
 about:
