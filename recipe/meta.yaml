@@ -41,14 +41,16 @@ requirements:
 {% set disabled_tests = disabled_tests + " and not test_ftp_downloader" %}
 
 # requests.exceptions.HTTPError: 403 Client Error: Forbidden for url: https://figshare.com/articles/dataset/Test_data_for_the_Pooch_library/14763051/1
-{% set disabled_tests = disabled_tests + " and not test_core.py::test_pooch_custom_url" %}  # [linux]
-{% set disabled_tests = disabled_tests + " and not test_core.py::test_pooch_download" %}  # [linux]
-{% set disabled_tests = disabled_tests + " and not test_core.py::test_load_registry_from_doi" %}  # [linux]
-{% set disabled_tests = disabled_tests + " and not test_figshare_url_file_not_found" %}  # [linux]
-{% set disabled_tests = disabled_tests + " and not test_doi_downloader" %}  # [linux]
-{% set disabled_tests = disabled_tests + " and not test_downloaders.py::test_figshare_unspecified_version" %}  # [linux]
-{% set disabled_tests = disabled_tests + " and not test_figshare_data_repository_versions" %}  # [linux]
-{% set disabled_tests = disabled_tests + " and not test_create_and_fetch" %}  # [linux]
+{% set disabled_tests = disabled_tests + " and not test_pooch_custom_url" %}
+{% set disabled_tests = disabled_tests + " and not test_pooch_download" %}
+{% set disabled_tests = disabled_tests + " and not test_load_registry_from_doi" %}
+{% set disabled_tests = disabled_tests + " and not test_figshare_url_file_not_found" %}
+{% set disabled_tests = disabled_tests + " and not test_doi_downloader" %}
+{% set disabled_tests = disabled_tests + " and not test_figshare_unspecified_version" %}
+{% set disabled_tests = disabled_tests + " and not test_figshare_data_repository_versions" %}
+{% set disabled_tests = disabled_tests + " and not test_create_and_fetch" %}
+{% set disabled_tests = disabled_tests + " and not test_figshare_url_file_not_found" %}  # [osx]
+{% set disabled_tests = disabled_tests + " and not test_doi_downloader" %}  # [osx]
 
 test:
   requires:
